@@ -1,5 +1,5 @@
 """
-HOSPITAL DE BLANES - Eliminació de Dummy Data
+HOSPITAL DE APOL·LO - Eliminació de Dummy Data
 Elimina totes les dades de les taules respectant l'ordre de FK.
 """
 

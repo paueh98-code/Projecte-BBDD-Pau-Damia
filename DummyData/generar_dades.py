@@ -26,7 +26,7 @@ from psycopg2.extras import execute_values
 # CONFIGURACIÓ
 # ============================================================
 
-# Connexió a la BD (modifica segons la teva configuració)
+# Connexió a la BD 
 DB_CONFIG = {
     "host": "192.168.56.110",
     "port": 5432,

@@ -1,5 +1,5 @@
 -- ============================================================
--- HOSPITAL DE BLANES - Creació d'Índexs
+-- HOSPITAL APOL·LO - Creació d'Índexs
 -- Optimització de rendiment per a consultes freqüents
 -- Autors: Pau Encinas, Damià Méndez
 -- ============================================================

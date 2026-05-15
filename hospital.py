@@ -4,6 +4,8 @@ import tkinter as tk
 import funcionsHospitalEmpleats as fhe
 import funcionsHospitalPacients as fhp
 import funcionsHospitalConsultes as fhc
+from  DummyData.eliminar_dades import eliminar_dummy_data as ed
+from  DummyData.generar_dades import menuDummyData as gdd
 
 #Variable per asegurar una connexio permanent durant tot el ús de la aplicació
 connexion = None
@@ -91,6 +93,18 @@ tk.Button(mainPage_frame, text="Informe de personal", command=lambda: fhc.inform
 
 #Veure el total de visites que hi han assignades a un dia en especific
 tk.Button(mainPage_frame, text="Revisar visites segons dia", command=lambda: fhc.visitesDia(root, connexion)).grid(row=4, column=3)
+
+#Veure dades sobre les visites de un dia en especific
+tk.Button(mainPage_frame, text="Planificació de visites actuals", command=lambda: fhc.visitesPlanificadesDia(root, connexion)).grid(row=5, column=2)
+
+#
+
+
+#Generar dades de probes
+tk.Button(mainPage_frame, text="Generar Dummy Data", command=lambda: gdd(root, connexion)).grid(row=6, column=2)
+
+#Eliminar dades
+tk.Button(mainPage_frame, text="Eliminar Dades", command=lambda: ed(connexion, root)).grid(row=6, column=3)
 
 #Boto que activa la funció 3
 tk.Button(mainPage_frame, text="Logout", command=lambda: logout_wrapper()).grid(row=9, column=2)

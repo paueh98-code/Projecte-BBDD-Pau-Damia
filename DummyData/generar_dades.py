@@ -17,6 +17,7 @@ import random
 import time
 import string
 from datetime import datetime, timedelta, date, time as dt_time
+import tkinter as tk
 
 from faker import Faker
 import psycopg2
@@ -25,15 +26,6 @@ from psycopg2.extras import execute_values
 # ============================================================
 # CONFIGURACIÓ
 # ============================================================
-
-# Connexió a la BD 
-DB_CONFIG = {
-    "host": "192.168.56.110",
-    "port": 5432,
-    "dbname": "hospitalapolo",
-    "user": "posgres",
-    "password": "Passw0rd",
-}
 
 # Faker amb locales
 fake_es = Faker("es_ES")
@@ -111,7 +103,7 @@ MEDICAMENTS_LLISTA = [
     "Eritromicina 500mg", "Clindamicina 300mg", "Vancomicina 500mg",
     "Gentamicina 80mg", "Cefalexina 500mg", "Ceftriaxona 1g",
     "Dexametasona 4mg", "Betametasona crema", "Mupirocina pomada",
-    "Lidocaïna 2%", "Morfina 10mg", "Fentanil 50mcg",
+    "Lidocaïna 2%", "Morfina 10mg", "Fentanil 50mg",
     "Gabapentina 300mg", "Pregabalina 75mg", "Levodopa 250mg",
     "Donepezil 5mg", "Risperidona 2mg", "Olanzapina 10mg",
     "Quetiapina 100mg", "Litio 300mg", "Àcid valproic 500mg",
@@ -649,16 +641,23 @@ def generar_operacions(cursor, quirofans, metge_ids, pacient_ids, infermer_ids):
 # FUNCIÓ PRINCIPAL
 # ============================================================
 
-def generar_dummy_data():
+def menuDummyData(root,connexion):
+    generadorDummyData_PopUp = tk.Toplevel(root)
+    generadorDummyData_PopUp.title("Generar dummy data")
+    generadorDummyData_PopUp.geometry("450x200")
+
+    tk.Label(generadorDummyData_PopUp, text="Segur que vols generar dummy data?").grid(row=1, column=1, columnspan=3)
+    
+    tk.Button(generadorDummyData_PopUp, text="Generar les dades", command=lambda: generar_dummy_data(connexion)).grid(row=2, column=1)
+    tk.Button(generadorDummyData_PopUp, text="Cancel·lar", command=lambda: generadorDummyData_PopUp.destroy()).grid(row=2, column=3)
+
+
+def generar_dummy_data(connexion):
     """Executa la generació completa de dummy data."""
-    print("=" * 56)
-    print("  HOSPITAL DE BLANES - Generació de Dummy Data")
-    print("=" * 56)
     t_total = time.time()
 
-    conn = psycopg2.connect(**DB_CONFIG)
-    conn.autocommit = False
-    cursor = conn.cursor()
+    connexion.autocommit = False
+    cursor = connexion.cursor()
 
     try:
         # 1. Estructura de l'hospital
@@ -668,45 +667,45 @@ def generar_dummy_data():
         quirofans = generar_quirofans(cursor)
         model_ids = generar_models_aparell(cursor)
         generar_aparells(cursor, quirofans, model_ids)
-        conn.commit()
+        connexion.commit()
 
         # 2. Catàlegs
         print("\n[FASE 2] Catàlegs (diagnòstics i medicaments)")
         diagnostic_ids = generar_diagnostics(cursor)
         medicament_ids = generar_medicaments(cursor)
-        conn.commit()
+        connexion.commit()
 
         # 3. Personal
         print("\n[FASE 3] Personal de l'hospital")
         metge_ids, nifs_usats = generar_empleats_i_metges(cursor)
-        conn.commit()
+        connexion.commit()
         infermer_ids = generar_empleats_i_infermers(cursor, metge_ids, nifs_usats)
-        conn.commit()
+        connexion.commit()
         generar_empleats_varis(cursor, nifs_usats, "neteja", QTY_NETEJA)
-        conn.commit()
+        connexion.commit()
         generar_empleats_varis(cursor, nifs_usats, "administratiu", QTY_ADMIN)
-        conn.commit()
+        connexion.commit()
 
         # 4. Pacients
         print("\n[FASE 4] Pacients")
         pacient_ids = generar_pacients(cursor)
-        conn.commit()
+        connexion.commit()
 
         # 5. Visites i receptes
         print("\n[FASE 5] Visites, receptes i línies de recepta")
         visita_ids, recepta_ids = generar_receptes_i_visites(
             cursor, metge_ids, pacient_ids, diagnostic_ids
         )
-        conn.commit()
+        connexion.commit()
         generar_linies_recepta(cursor, recepta_ids, medicament_ids)
-        conn.commit()
+        connexion.commit()
 
         # 6. Ingressos i operacions
         print("\n[FASE 6] Ingressos i operacions")
         generar_ingressos(cursor, habitacions, pacient_ids)
-        conn.commit()
+        connexion.commit()
         generar_operacions(cursor, quirofans, metge_ids, pacient_ids, infermer_ids)
-        conn.commit()
+        connexion.commit()
 
         elapsed = time.time() - t_total
         print("\n" + "=" * 56)
@@ -725,12 +724,12 @@ def generar_dummy_data():
         print("=" * 56)
 
     except Exception as e:
-        conn.rollback()
+        connexion.rollback()
         print(f"\n\nERROR: {e}")
         raise
     finally:
         cursor.close()
-        conn.close()
+        
 
 
 # ============================================================

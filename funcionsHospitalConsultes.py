@@ -153,14 +153,14 @@ def visitesDia(root, connexion):
     diaVisitaEntry = tk.Entry(visitesDia_popUp, width=10)
     diaVisitaEntry.grid(row=1, column=2)
 
-    tk.Button(visitesDia_popUp, text="Comprovar", command=lambda: revisarVisites(connexion, tree, diaVisitaEntry)).grid(row=1, column=3)
+    tk.Button(visitesDia_popUp, text="Comprovar", command=lambda: comptarVisites(connexion, tree, diaVisitaEntry)).grid(row=1, column=3)
 
     tree = ttk.Treeview(visitesDia_popUp, columns=("Visites"), show="headings")
     tree.heading("Visites", text="Visites")
     tree.grid(row=2, column=1, columnspan=3)
     
 #Funció 18: Aqui utilitzem el dia de la funció 17 per a donar el total de visites d'aquell dia
-def revisarVisites(connexion, tree, diaVisitaEntry):    
+def comptarVisites(connexion, tree, diaVisitaEntry):    
     try:
         for item in tree.get_children():
             tree.delete(item)
@@ -170,6 +170,48 @@ def revisarVisites(connexion, tree, diaVisitaEntry):
             SELECT COUNT(id_visita) AS "Visites"
             FROM visita
             WHERE data = %s''', (diaVisitaEntry.get(),))
+        dades = cursor.fetchall()
+        cursor.close()
+
+        for fila in dades:
+            tree.insert("", "end", values=fila)
+    except Exception as e:
+        print("ERROR", e)
+        connexion.rollback()
+
+#Funció 19: Amb aquesta funció donarem un dia a la funció 20 
+def visitesPlanificadesDia(root, connexion):
+    visitesPlanificadesDia_popUp = tk.Toplevel(root)
+    visitesPlanificadesDia_popUp.title("Visites planificades per cert dia")
+
+    tk.Label(visitesPlanificadesDia_popUp, text="Dia de les visites:").grid(row=1, column=1)
+    dataVisitaEntry = tk.Entry(visitesPlanificadesDia_popUp, width=30)
+    dataVisitaEntry.grid(row=1, column=2)
+
+    tk.Button(visitesPlanificadesDia_popUp, text="Veure visites", command=lambda: revisarVisites(tree, dataVisitaEntry, connexion)).grid(row=1, column=3)
+
+    tree = ttk.Treeview(visitesPlanificadesDia_popUp, columns=("id_visita", "descripcio", "hora", "Nom Metge", "Nom Pacient"), show="headings")
+    tree.heading("id_visita", text="Id")
+    tree.heading("descripcio", text="Descripció")
+    tree.heading("hora", text="Hora")
+    tree.heading("Nom Metge", text="Nom Metge")
+    tree.heading("Nom Pacient", text="Nom Pacient")
+    tree.grid(row=2, column=1, columnspan=5)
+
+#Funció 20: 
+def revisarVisites(tree, dataVisitaEntry, connexion):
+    try:
+        for item in tree.get_children():
+            tree.delete(item)
+
+        cursor = connexion.cursor()
+        cursor.execute('''
+            SELECT v.id_visita, v.descripcio, v.hora, e.nom||' '||e.cognom1||' '||e.cognom2 AS "Nom metge", p.nom||' '||p.cognom1||' '||p.cognom2 AS "Nom pacient"
+            FROM visita v
+            INNER JOIN empleat e ON e.id_emp = v.id_metge
+            INNER JOIN pacient p ON p.id_pacient = v.id_pacient
+            WHERE v.data = %s
+            ORDER BY v.hora DESC''', (dataVisitaEntry.get(),))
         dades = cursor.fetchall()
         cursor.close()
 

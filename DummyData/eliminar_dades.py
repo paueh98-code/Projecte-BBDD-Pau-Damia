@@ -2,16 +2,8 @@
 HOSPITAL DE APOL·LO - Eliminació de Dummy Data
 Elimina totes les dades de les taules respectant l'ordre de FK.
 """
-
+import tkinter as tk
 import psycopg2
-
-DB_CONFIG = {
-    "host": "192.168.56.110",
-    "port": 5432,
-    "dbname": "hospitalapolo",
-    "user": "posgres",
-    "password": "Passw0rd",
-}
 
 # Ordre invers de dependències (primer les que tenen FK)
 TAULES_EN_ORDRE = [
@@ -35,20 +27,19 @@ TAULES_EN_ORDRE = [
 ]
 
 
-def eliminar_dummy_data():
+def eliminar_dummy_data(connexion, root):
     """Elimina totes les dades dummy de la BD."""
-    print("=" * 56)
-    print("  HOSPITAL DE BLANES - Eliminació de Dummy Data")
-    print("=" * 56)
+    eliminarDummyData_PopUp = tk.Toplevel(root)
+    eliminarDummyData_PopUp.title("Eliminar Dades")
+    eliminarDummyData_PopUp.geometry("450x200")
 
-    confirmacio = input("\n  Segur que vols eliminar TOTES les dades? (escriu SI): ")
-    if confirmacio != "SI":
-        print("  Operació cancel·lada.")
-        return
+    tk.Label(eliminarDummyData_PopUp, text="Segur que vols eliminar TOTES les dades?").grid(row=1, column=1, columnspan=3)
+    
+    tk.Button(eliminarDummyData_PopUp, text="Purgar totes les dades", command=lambda: granPurga(connexion)).grid(row=2, column=1)
+    tk.Button(eliminarDummyData_PopUp, text="Cancel·lar", command=lambda: eliminarDummyData_PopUp.destroy()).grid(row=2, column=3)
 
-    conn = psycopg2.connect(**DB_CONFIG)
-    cursor = conn.cursor()
-
+def granPurga(connexion):
+    cursor = connexion.cursor()
     try:
         for taula in TAULES_EN_ORDRE:
             cursor.execute(f"TRUNCATE TABLE {taula} CASCADE;")
@@ -72,18 +63,14 @@ def eliminar_dummy_data():
             END $$;
         """)
 
-        conn.commit()
-        print("\n  Totes les dades eliminades i seqüències reiniciades.")
-        print("=" * 56)
+        connexion.commit()
 
     except Exception as e:
-        conn.rollback()
+        connexion.rollback()
         print(f"\n  ERROR: {e}")
         raise
     finally:
         cursor.close()
-        conn.close()
-
 
 if __name__ == "__main__":
     eliminar_dummy_data()

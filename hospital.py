@@ -6,6 +6,7 @@ import funcionsHospitalPacients as fhp
 import funcionsHospitalConsultes as fhc
 from  DummyData.eliminar_dades import eliminar_dummy_data as ed
 from  DummyData.generar_dades import menuDummyData as gdd
+import exportacioDades as exp
 
 #Variable per asegurar una connexio permanent durant tot el ús de la aplicació
 connexion = None
@@ -48,7 +49,6 @@ root.geometry("1280x720")
 #LOGIN FRAME/PAGE: Primera pagina que veura l'usuari. Aqui es un farà login
 login_frame = tk.Frame(root)
 login_frame.pack()
-
 #Insertar logo...
 
 
@@ -106,11 +106,16 @@ tk.Button(mainPage_frame, text="Generar Dummy Data", command=lambda: gdd(root, c
 #Eliminar dades
 tk.Button(mainPage_frame, text="Eliminar Dades", command=lambda: ed(connexion, root)).grid(row=6, column=3)
 
+#Exportació de dades a un JSON
+tk.Button(mainPage_frame, text="Exportar visites a JSON", command=lambda: exp.dadesAExportar(connexion, root)).grid(row=7, column=2)
+
+#
+
 #Boto que activa la funció 3
-tk.Button(mainPage_frame, text="Logout", command=lambda: logout_wrapper()).grid(row=9, column=2)
+tk.Button(mainPage_frame, text="Logout", command=lambda: logout_wrapper()).grid(row=8, column=2)
 
 #Botó que activa la funció 2
-tk.Button(mainPage_frame, text="Close", command=lambda: fhe.tancar(connexion, root)).grid(row=9,column=3)
+tk.Button(mainPage_frame, text="Close", command=lambda: fhe.tancar(connexion, root)).grid(row=8,column=3)
 
 #Aixo permet que la pàgina es mantingui oberta durant tot el proces
 root.mainloop()

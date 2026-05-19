@@ -198,7 +198,7 @@ def visitesPlanificadesDia(root, connexion):
     tree.heading("Nom Pacient", text="Nom Pacient")
     tree.grid(row=2, column=1, columnspan=5)
 
-#Funció 20: 
+#Funció 20: Aquesta funció procesa el dia oferit a la funció 20 i ens dona la informació de les visites d'aquell dia
 def revisarVisites(tree, dataVisitaEntry, connexion):
     try:
         for item in tree.get_children():

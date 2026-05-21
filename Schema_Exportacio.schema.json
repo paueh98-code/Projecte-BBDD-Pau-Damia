@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Llista de visites mèdiques",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id_visita": {
+        "type": "integer"
+      },
+      "hora": {
+        "type": "string",
+        "pattern": "^([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)$",
+        "description": "Hora en format HH:MM:SS"
+      },
+      "data": {
+        "type": "string",
+        "format": "date",
+        "description": "Data en format YYYY-MM-DD"
+      },
+      "descripcio": {
+        "type": ["string", "null"]
+      },
+      "id_metge": {
+        "type": "integer"
+      },
+      "id_pacient": {
+        "type": "integer"
+      },
+      "id_recepta": {
+        "type": ["integer", "null"]
+      },
+      "id_diagnostic": {
+        "type": ["integer", "null"]
+      }
+    },
+    "required": [
+      "id_visita",
+      "hora",
+      "data",
+      "descripcio",
+      "id_metge",
+      "id_pacient",
+      "id_recepta",
+      "id_diagnostic"
+    ],
+    "additionalProperties": false
+  }
+}

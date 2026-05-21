@@ -220,3 +220,20 @@ def revisarVisites(tree, dataVisitaEntry, connexion):
     except Exception as e:
         print("ERROR", e)
         connexion.rollback()
+
+#Funció 21: Aqui demanarem el dia per a l'informe de operacions
+def diaOperacions(connexion, root):
+    diaOperacionsPopUp = tk.Toplevel(root)
+    diaOperacionsPopUp.title("Informe d'operacions segons dia")
+    diaOperacionsPopUp.geometry("900x450")
+
+    tk.Label(diaOperacionsPopUp, text="Dia a revisar: "). grid(row=1, column=1)
+    diaOperacionsEntry = tk.Entry(diaOperacionsPopUp, width=30)
+    diaOperacionsEntry.grid(row=1, column=2)
+
+    tk.Button(diaOperacionsPopUp, text="Revisar dia", command=lambda: revisarOperacions(connexion, diaOperacionsEntry)).grid(row=1, column=3)
+
+
+#Funció 22:
+def revisarOperacions(connexion, diaOperacionsEntry):
+    p

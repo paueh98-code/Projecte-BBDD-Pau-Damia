@@ -74,48 +74,49 @@ tk.Label(login_frame, textvariable=errors).grid(row=4, column=2)
 mainPage_frame = tk.Frame(root)
 
 #El titol de la pàgina principal (Encara esta WIP)
-tk.Label(mainPage_frame, text="Pàgina principal Hospital Apol·lo").grid(row=1, column=2, columnspan=2)
+tk.Label(mainPage_frame, text="Pàgina principal Hospital Apol·lo").grid(row=1, column=2, columnspan=2, padx=10, pady=10)
 
 #Donar d'alta empleats
-tk.Button(mainPage_frame, text="Donar d'alta a empleats", command=lambda: fhe.altaEmpleats(root, connexion)).grid(row=2,column=2)
+tk.Button(mainPage_frame, text="Donar d'alta a empleats", command=lambda: fhe.altaEmpleats(root, connexion)).grid(row=2,column=2, padx=10, pady=10)
 
 #Donar d'alta empleats
-tk.Button(mainPage_frame, text="Ingresar pacients", command=lambda: fhp.registrarPacients(root, connexion)).grid(row=2,column=3)
+tk.Button(mainPage_frame, text="Ingresar pacients", command=lambda: fhp.registrarPacients(root, connexion)).grid(row=2,column=3, padx=10, pady=10)
 
 #Veure si un infermer te relacio amb una planta o un metge
-tk.Button(mainPage_frame, text="Visualitzar relació d'un infermer", command=lambda: fhc.relacioInf(connexion, root)).grid(row=3,column=2)
+tk.Button(mainPage_frame, text="Visualitzar relació d'un infermer", command=lambda: fhc.relacioInf(connexion, root)).grid(row=3,column=2, padx=10, pady=10)
 
 #Veure dades d'una planta
-tk.Button(mainPage_frame, text="Veure dades sobre una planta", command=lambda: fhc.resumPlanta(root, connexion)).grid(row=3, column=3)
+tk.Button(mainPage_frame, text="Veure dades sobre una planta", command=lambda: fhc.resumPlanta(root, connexion)).grid(row=3, column=3, padx=10, pady=10)
 
 #Informe sobre el personal actual del hospital
-tk.Button(mainPage_frame, text="Informe de personal", command=lambda: fhc.informePersonal(root, connexion)).grid(row=4, column=2)
+tk.Button(mainPage_frame, text="Informe de personal", command=lambda: fhc.informePersonal(root, connexion)).grid(row=4, column=2, padx=10, pady=10)
 
 #Veure el total de visites que hi han assignades a un dia en especific
-tk.Button(mainPage_frame, text="Revisar visites segons dia", command=lambda: fhc.visitesDia(root, connexion)).grid(row=4, column=3)
+tk.Button(mainPage_frame, text="Revisar visites segons dia", command=lambda: fhc.visitesDia(root, connexion)).grid(row=4, column=3, padx=10, pady=10)
 
 #Veure dades sobre les visites de un dia en especific
-tk.Button(mainPage_frame, text="Planificació de visites actuals", command=lambda: fhc.visitesPlanificadesDia(root, connexion)).grid(row=5, column=2)
+tk.Button(mainPage_frame, text="Planificació de visites actuals", command=lambda: fhc.visitesPlanificadesDia(root, connexion)).grid(row=5, column=2, padx=10, pady=10)
 
-#
-
+#Veure per a un dia la informació de les operacions previstes
+tk.Button(mainPage_frame, text="Informació d'operacions", command=lambda: fhc.diaOperacions(connexion, root)).grid(row=5, column=3, padx=10, pady=10)
 
 #Generar dades de probes
-tk.Button(mainPage_frame, text="Generar Dummy Data", command=lambda: gdd(root, connexion)).grid(row=6, column=2)
+tk.Button(mainPage_frame, text="Generar Dummy Data", command=lambda: gdd(root, connexion)).grid(row=6, column=2, padx=10, pady=10)
 
 #Eliminar dades
-tk.Button(mainPage_frame, text="Eliminar Dades", command=lambda: ed(connexion, root)).grid(row=6, column=3)
+tk.Button(mainPage_frame, text="Eliminar Dades", command=lambda: ed(connexion, root)).grid(row=6, column=3, padx=10, pady=10)
 
 #Exportació de dades a un JSON
-tk.Button(mainPage_frame, text="Exportar visites a JSON", command=lambda: exp.dadesAExportar(connexion, root)).grid(row=7, column=2)
+tk.Button(mainPage_frame, text="Exportar visites a JSON", command=lambda: exp.dadesAExportar(connexion, root)).grid(row=7, column=2, padx=10, pady=10)
 
 #
 
+
 #Boto que activa la funció 3
-tk.Button(mainPage_frame, text="Logout", command=lambda: logout_wrapper()).grid(row=8, column=2)
+tk.Button(mainPage_frame, text="Logout", command=lambda: logout_wrapper()).grid(row=8, column=2, padx=10, pady=10)
 
 #Botó que activa la funció 2
-tk.Button(mainPage_frame, text="Close", command=lambda: fhe.tancar(connexion, root)).grid(row=8,column=3)
+tk.Button(mainPage_frame, text="Close", command=lambda: fhe.tancar(connexion, root)).grid(row=8,column=3, padx=10, pady=10)
 
 #Aixo permet que la pàgina es mantingui oberta durant tot el proces
 root.mainloop()

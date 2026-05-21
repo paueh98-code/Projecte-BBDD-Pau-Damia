@@ -2,6 +2,8 @@ import psycopg2 as psy
 import psycopg2.extras as psye
 import tkinter as tk
 import json
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError
 
 def dadesAExportar(connexion, root):
     exportacioPopup = tk.Toplevel(root)
@@ -50,9 +52,22 @@ def exportacioDades(connexion, diaIniciEntry, diaFinalEntry):
 
                     primeraFila = False
             fitxer.write("\n]")
-        
+        print("Exportació exitosa")
+
         cursor.close()
-        print("Exitos")
+
+        with open("Schema_Exportacio.schema.json", "r") as schema:
+            jsonSchema = json.load(schema)
+        
+        with open("Dades_Exportades.json", "r") as fitxer:
+            dades = json.load(fitxer)
+        
     except Exception as e:
         print("ERROR", e)
         connexion.rollback()
+    try:
+        validate(instance=dades, schema=jsonSchema)
+        print("Validació exitosa")
+
+    except ValidationError as e:
+        print("Error de validació:", e.message)

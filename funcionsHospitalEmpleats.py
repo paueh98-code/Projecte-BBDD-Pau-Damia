@@ -98,21 +98,21 @@ def enviarAlta(eNameEntry, eSurname1Entry, eSurname2Entry, eNifEntry, eEmailEntr
         frame = tk.Frame(metge_popUp)
         frame.grid(row=0, column=0, sticky="nsew")
 
-        for i in range(1, 7):
-            frame.columnconfigure(i, weight=1)
+        frame.columnconfigure(2, weight=1)
 
-        tk.Label(metge_popUp, text="CV:").grid(row=1, column=1)
-        mCvEntry = tk.Entry(metge_popUp, width=30)
+        tk.Label(frame, text="CV:").grid(row=1, column=1, sticky="w")
+        mCvEntry = tk.Entry(frame, width=30)
         mCvEntry.grid(row=1, column=2, sticky="ew")
 
-        tk.Label(metge_popUp, text="Especialitat:").grid(row=2, column=1)
-        mEspecialitatEntry = tk.Entry(metge_popUp, width=30)
+        tk.Label(frame, text="Especialitat:").grid(row=2, column=1, sticky="w")
+        mEspecialitatEntry = tk.Entry(frame, width=30)
         mEspecialitatEntry.grid(row=2, column=2, sticky="ew")
-        tk.Label(metge_popUp, text="Numero Colegiat:").grid(row=3, column=1)
-        numColegiatEntry = tk.Entry(metge_popUp, width=30)
+        
+        tk.Label(frame, text="Numero Colegiat:").grid(row=3, column=1, sticky="w")
+        numColegiatEntry = tk.Entry(frame, width=30)
         numColegiatEntry.grid(row=3, column=2, sticky="ew")
 
-        tk.Button(metge_popUp, text="Enviar", command=lambda: enviarMetge(connexion, eNifEntry, mCvEntry, mEspecialitatEntry, numColegiatEntry, metge_popUp)).grid(row=4, column=1)
+        tk.Button(frame, text="Enviar", command=lambda: enviarMetge(connexion, eNifEntry, mCvEntry, mEspecialitatEntry, numColegiatEntry, metge_popUp)).grid(row=4, column=1)
 
 #Especificacions del infermers/eras per a la taula infermer
     elif feinaEntry.get() == "infermer":
@@ -126,24 +126,24 @@ def enviarAlta(eNameEntry, eSurname1Entry, eSurname2Entry, eNifEntry, eEmailEntr
         frame = tk.Frame(infermer_popUp)
         frame.grid(row=0, column=0, sticky="nsew")
 
-        for i in range(1, 7):
+        for i in range(1, 4):
             frame.columnconfigure(i, weight=1)
 
         tk.Label(frame, text="CV:").grid(row=1, column=1)
         iCvEntry = tk.Entry(frame, width=30)
-        iCvEntry.grid(row=1, column=2)
+        iCvEntry.grid(row=1, column=2, sticky="ew")
 
         tk.Label(frame, text="Especialitat:").grid(row=1, column=3)
         iEspecialitatEntry = tk.Entry(frame, width=30)
-        iEspecialitatEntry.grid(row=1, column=4)
+        iEspecialitatEntry.grid(row=1, column=4, sticky="ew")
 
         tk.Label(frame, text="Id metge:").grid(row=2, column=1)
         idMetgeEntry = tk.Entry(frame, width=30)
-        idMetgeEntry.grid(row=2, column=2)
+        idMetgeEntry.grid(row=2, column=2, sticky="ew")
 
         tk.Label(frame, text="Num. Planta:").grid(row=2, column=3)
         numPlantaEntry = tk.Entry(frame, width=30)
-        numPlantaEntry.grid(row=2, column=4)
+        numPlantaEntry.grid(row=2, column=4, sticky="ew")
 
         tk.Button(frame, text="Enviar", command=lambda: enviarDadesInfermer(connexion, eNifEntry, iCvEntry, iEspecialitatEntry, idMetgeEntry, numPlantaEntry, infermer_popUp)).grid(row=3, column=1)
 

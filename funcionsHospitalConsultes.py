@@ -1,12 +1,13 @@
 import tkinter as tk
 import psycopg2 as psy
 from tkinter import ttk
+import datetime as dt
 
 #Funció 12: Demana les dades per a verificar la relació del infermer/era
 def relacioInf(connexion, root):
     relacioInf_popUp = tk.Toplevel(root)
     relacioInf_popUp.title("Relacio del Infermer")
-    relacioInf_popUp.geometry("900x450")
+    relacioInf_popUp.geometry("600x300")
 
     tk.Label(relacioInf_popUp, text="Id Infermer").grid(row=1, column=1)
     idInfermerEntry = tk.Entry(relacioInf_popUp, width=30)
@@ -190,13 +191,21 @@ def visitesPlanificadesDia(root, connexion):
 
     tk.Button(visitesPlanificadesDia_popUp, text="Veure visites", command=lambda: revisarVisites(tree, dataVisitaEntry, connexion)).grid(row=1, column=3)
 
-    tree = ttk.Treeview(visitesPlanificadesDia_popUp, columns=("id_visita", "descripcio", "hora", "Nom Metge", "Nom Pacient"), show="headings")
+    treeFrame = tk.Frame(visitesPlanificadesDia_popUp)
+    treeFrame.grid(row=2, column=1, columnspan=5, pady=10)
+
+    scrollbar = tk.Scrollbar(treeFrame)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+    tree = ttk.Treeview(treeFrame, columns=("id_visita", "descripcio", "hora", "Nom Metge", "Nom Pacient"), show="headings", yscrollcommand=scrollbar.set)
     tree.heading("id_visita", text="Id")
     tree.heading("descripcio", text="Descripció")
     tree.heading("hora", text="Hora")
     tree.heading("Nom Metge", text="Nom Metge")
     tree.heading("Nom Pacient", text="Nom Pacient")
-    tree.grid(row=2, column=1, columnspan=5)
+    tree.pack(side=tk.LEFT, fill=tk.BOTH)
+
+    scrollbar.config(command=tree.yview)
 
 #Funció 20: Aquesta funció procesa el dia oferit a la funció 20 i ens dona la informació de les visites d'aquell dia
 def revisarVisites(tree, dataVisitaEntry, connexion):
@@ -227,13 +236,50 @@ def diaOperacions(connexion, root):
     diaOperacionsPopUp.title("Informe d'operacions segons dia")
     diaOperacionsPopUp.geometry("900x450")
 
-    tk.Label(diaOperacionsPopUp, text="Dia a revisar: "). grid(row=1, column=1)
+    diaOperacionsPopUp.grid_columnconfigure(1, weight=1)
+    diaOperacionsPopUp.grid_columnconfigure(2, weight=1)
+    diaOperacionsPopUp.grid_columnconfigure(3, weight=0)
+    diaOperacionsPopUp.grid_rowconfigure(1, weight=0)
+    diaOperacionsPopUp.grid_rowconfigure(2, weight=1)
+
+    tk.Label(diaOperacionsPopUp, text="Dia a revisar: "). grid(row=1, column=1, sticky="w")
     diaOperacionsEntry = tk.Entry(diaOperacionsPopUp, width=30)
-    diaOperacionsEntry.grid(row=1, column=2)
+    diaOperacionsEntry.grid(row=1, column=2, sticky="ew")
 
-    tk.Button(diaOperacionsPopUp, text="Revisar dia", command=lambda: revisarOperacions(connexion, diaOperacionsEntry)).grid(row=1, column=3)
+    tk.Button(diaOperacionsPopUp, text="Revisar dia", command=lambda: revisarOperacions(connexion, diaOperacionsEntry, text)).grid(row=1, column=3)
 
+    text = tk.Text(diaOperacionsPopUp, wrap="none")
+    text.grid(row=2, column=1, columnspan=3, sticky="nsew")
 
-#Funció 22:
-def revisarOperacions(connexion, diaOperacionsEntry):
-    p
+    scroll_y = ttk.Scrollbar(diaOperacionsPopUp, orient="vertical", command=text.yview)
+    scroll_x = ttk.Scrollbar(diaOperacionsPopUp, orient="horizontal", command=text.xview)
+
+    text.configure(yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+    scroll_y.grid(row=2, column=3, sticky="ns")
+    scroll_x.grid(row=3, column=1, columnspan=2, sticky="ew")
+
+#Funció 22: Aqui ens donara la informació que necesitem de les operacions segons el dia ingresat a la funció 21
+def revisarOperacions(connexion, diaOperacionsEntry, text):
+    try:
+        cursor = connexion.cursor()
+        
+        #Netejar les notices anteriors
+        connexion.notices.clear()
+
+        dia = dt.datetime.strptime(diaOperacionsEntry.get(),"%Y-%m-%d").date()
+        #Call a la procedure
+        cursor.execute('''
+            CALL mostrar_operacions_dia(%s)''', (dia,))
+
+        #Netejar el text de la variable "text"
+        text.delete("1.0", "end")
+
+        #Anotar les noticies que va rebent
+        for notice in connexion.notices:
+            text.insert("end", notice)
+
+        connexion.commit()
+        cursor.close()
+    except Exception as e:
+        print("ERROR", e)
+        connexion.rollback()

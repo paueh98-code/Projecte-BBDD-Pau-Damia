@@ -80,7 +80,7 @@ tk.Label(mainPage_frame, text="Pàgina principal Hospital Apol·lo").grid(row=1,
 tk.Button(mainPage_frame, text="Donar d'alta a empleats", command=lambda: fhe.altaEmpleats(root, connexion)).grid(row=2,column=2, padx=10, pady=10)
 
 #Donar d'alta empleats
-tk.Button(mainPage_frame, text="Ingresar pacients", command=lambda: fhp.registrarPacients(root, connexion)).grid(row=2,column=3, padx=10, pady=10)
+tk.Button(mainPage_frame, text="Ingressar pacients", command=lambda: fhp.registrarPacients(root, connexion)).grid(row=2,column=3, padx=10, pady=10)
 
 #Veure si un infermer te relacio amb una planta o un metge
 tk.Button(mainPage_frame, text="Visualitzar relació d'un infermer", command=lambda: fhc.relacioInf(connexion, root)).grid(row=3,column=2, padx=10, pady=10)
